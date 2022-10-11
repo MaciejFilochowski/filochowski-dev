@@ -137,13 +137,6 @@ class _HomePageState extends State<HomePage> {
                                     "https://www.facebook.com/maciej.filochowski.93/"));
                               },
                               icon: const FaIcon(FontAwesomeIcons.facebookF)),
-                          IconButton(
-                              tooltip: "Visit my Instagram",
-                              onPressed: () {
-                                launchUrl(Uri.parse(
-                                    "https://www.instagram.com/tenmaciejfilochowski/"));
-                              },
-                              icon: const FaIcon(FontAwesomeIcons.instagram)),
                         ],
                       ),
                     ],
