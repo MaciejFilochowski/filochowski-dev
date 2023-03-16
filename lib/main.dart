@@ -50,6 +50,7 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: Center(
           child: Container(
+            width: double.infinity,
             decoration: const BoxDecoration(
               color: Colors.black87,
             ),
@@ -91,53 +92,57 @@ class _HomePageState extends State<HomePage> {
                       ),
                       const Text("Software Developer"),
                       const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            tooltip: "Visit my GitHub",
-                            onPressed: () {
-                              launchUrl(Uri.parse(
-                                  "https://github.com/MaciejFilochowski"));
-                            },
-                            icon: const FaIcon(FontAwesomeIcons.github),
-                          ),
-                          IconButton(
-                              tooltip: "Visit my Stack Overflow",
+                      Container(
+                        constraints: const BoxConstraints(maxWidth: 800),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            IconButton(
+                              tooltip: "Visit my GitHub",
                               onPressed: () {
                                 launchUrl(Uri.parse(
-                                    "https://stackoverflow.com/users/17966769/maciejfilochowski"));
+                                    "https://github.com/MaciejFilochowski"));
                               },
-                              icon:
-                                  const FaIcon(FontAwesomeIcons.stackOverflow)),
-                          IconButton(
-                              tooltip: "Call me",
-                              onPressed: () {
-                                launchUrl(Uri.parse("tel:+48-602-670-402"));
-                              },
-                              icon: const FaIcon(FontAwesomeIcons.phone)),
-                          IconButton(
-                              tooltip: "Send me an email",
-                              onPressed: () {
-                                launchUrl(Uri.parse(
-                                    "mailto: contact@filochowski.dev"));
-                              },
-                              icon: const FaIcon(FontAwesomeIcons.envelope)),
-                          IconButton(
-                              tooltip: "Visit my LinkedIn",
-                              onPressed: () {
-                                launchUrl(Uri.parse(
-                                    "https://www.linkedin.com/in/maciej-filochowski/"));
-                              },
-                              icon: const FaIcon(FontAwesomeIcons.linkedinIn)),
-                          IconButton(
-                              tooltip: "Visit my Facebook",
-                              onPressed: () {
-                                launchUrl(Uri.parse(
-                                    "https://www.facebook.com/maciej.filochowski.93/"));
-                              },
-                              icon: const FaIcon(FontAwesomeIcons.facebookF)),
-                        ],
+                              icon: const FaIcon(FontAwesomeIcons.github),
+                            ),
+                            IconButton(
+                                tooltip: "Visit my Stack Overflow",
+                                onPressed: () {
+                                  launchUrl(Uri.parse(
+                                      "https://stackoverflow.com/users/17966769/maciejfilochowski"));
+                                },
+                                icon: const FaIcon(
+                                    FontAwesomeIcons.stackOverflow)),
+                            IconButton(
+                                tooltip: "Call me",
+                                onPressed: () {
+                                  launchUrl(Uri.parse("tel:+48-602-670-402"));
+                                },
+                                icon: const FaIcon(FontAwesomeIcons.phone)),
+                            IconButton(
+                                tooltip: "Send me an email",
+                                onPressed: () {
+                                  launchUrl(Uri.parse(
+                                      "mailto: contact@filochowski.dev"));
+                                },
+                                icon: const FaIcon(FontAwesomeIcons.envelope)),
+                            IconButton(
+                                tooltip: "Visit my LinkedIn",
+                                onPressed: () {
+                                  launchUrl(Uri.parse(
+                                      "https://www.linkedin.com/in/maciej-filochowski/"));
+                                },
+                                icon:
+                                    const FaIcon(FontAwesomeIcons.linkedinIn)),
+                            IconButton(
+                                tooltip: "Visit my Facebook",
+                                onPressed: () {
+                                  launchUrl(Uri.parse(
+                                      "https://www.facebook.com/maciej.filochowski.93/"));
+                                },
+                                icon: const FaIcon(FontAwesomeIcons.facebookF)),
+                          ],
+                        ),
                       ),
                     ],
                   ),
