@@ -1,11 +1,14 @@
 import 'dart:ui';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:filochowski_dev/bloc/language_bloc.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:particles_flutter/particles_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(const App());
@@ -16,24 +19,37 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Maciej Filochowski - Software developer',
-      theme: ThemeData(
-          hoverColor: Colors.black.withOpacity(0.2),
-          iconTheme: const IconThemeData(
-            color: Colors.white,
-            size: 35,
-          ),
-          textTheme: const TextTheme(
-            headline1: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-            bodyText1: TextStyle(),
-            bodyText2: TextStyle(),
-          ).apply(
-            bodyColor: Colors.white,
-            displayColor: Colors.white,
-          )),
-      home: const HomePage(title: 'Maciej Filochowski'),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => LanguageBloc()..add(LoadLanguage()))
+      ],
+      child: BlocBuilder<LanguageBloc, LanguageState>(
+        builder: (context, state) {
+          return MaterialApp(
+            locale: state.locale,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: const [Locale("en"), Locale("pl")],
+            debugShowCheckedModeBanner: false,
+            title: 'Maciej Filochowski - Software developer',
+            theme: ThemeData(
+                hoverColor: Colors.black.withOpacity(0.2),
+                iconTheme: const IconThemeData(
+                  color: Colors.white,
+                  size: 35,
+                ),
+                textTheme: const TextTheme(
+                  headline1:
+                      TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                  bodyText1: TextStyle(),
+                  bodyText2: TextStyle(),
+                ).apply(
+                  bodyColor: Colors.white,
+                  displayColor: Colors.white,
+                )),
+            home: const HomePage(title: 'Maciej Filochowski'),
+          );
+        },
+      ),
     );
   }
 }
@@ -78,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                   child: Container(
-                    color: Colors.grey.withOpacity(0.1),
+                    color: Colors.black.withOpacity(0.1),
                     alignment: Alignment.center,
                   ),
                 ),
@@ -89,6 +105,42 @@ class _HomePageState extends State<HomePage> {
                     Expanded(
                       child: Column(
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                DropdownButton<String>(
+                                    value: context
+                                        .read<LanguageBloc>()
+                                        .state
+                                        .locale
+                                        .languageCode,
+                                    dropdownColor: Colors.black87,
+                                    elevation: 16,
+                                    style: const TextStyle(color: Colors.white),
+                                    underline: Container(
+                                      height: 1,
+                                      color: Colors.grey,
+                                    ),
+                                    onChanged: (String? value) {
+                                      context
+                                          .read<LanguageBloc>()
+                                          .add(ChangeLanguage(Locale(value!)));
+                                    },
+                                    items: const [
+                                      DropdownMenuItem(
+                                        value: "pl",
+                                        child: Text("Polish"),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "en",
+                                        child: Text("English"),
+                                      ),
+                                    ]),
+                              ],
+                            ),
+                          ),
                           Padding(
                             padding: const EdgeInsets.all(20.0),
                             child: Container(
@@ -129,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 IconButton(
-                                  tooltip: "Visit my GitHub",
+                                  tooltip: AppLocalizations.of(context)!.gitHub,
                                   onPressed: () {
                                     launchUrl(Uri.parse(
                                         "https://github.com/MaciejFilochowski"));
@@ -137,7 +189,8 @@ class _HomePageState extends State<HomePage> {
                                   icon: const FaIcon(FontAwesomeIcons.github),
                                 ),
                                 IconButton(
-                                    tooltip: "Visit my Stack Overflow",
+                                    tooltip: AppLocalizations.of(context)!
+                                        .stackoverflow,
                                     onPressed: () {
                                       launchUrl(Uri.parse(
                                           "https://stackoverflow.com/users/17966769/maciejfilochowski"));
@@ -145,14 +198,15 @@ class _HomePageState extends State<HomePage> {
                                     icon: const FaIcon(
                                         FontAwesomeIcons.stackOverflow)),
                                 IconButton(
-                                    tooltip: "Call me",
+                                    tooltip:
+                                        AppLocalizations.of(context)!.phone,
                                     onPressed: () {
                                       launchUrl(
                                           Uri.parse("tel:+48-602-670-402"));
                                     },
                                     icon: const FaIcon(FontAwesomeIcons.phone)),
                                 IconButton(
-                                    tooltip: "Send me an email",
+                                    tooltip: AppLocalizations.of(context)!.mail,
                                     onPressed: () {
                                       launchUrl(Uri.parse(
                                           "mailto: contact@filochowski.dev"));
@@ -160,7 +214,8 @@ class _HomePageState extends State<HomePage> {
                                     icon: const FaIcon(
                                         FontAwesomeIcons.envelope)),
                                 IconButton(
-                                    tooltip: "Visit my LinkedIn",
+                                    tooltip:
+                                        AppLocalizations.of(context)!.linkedIn,
                                     onPressed: () {
                                       launchUrl(Uri.parse(
                                           "https://www.linkedin.com/in/maciej-filochowski/"));
@@ -168,7 +223,8 @@ class _HomePageState extends State<HomePage> {
                                     icon: const FaIcon(
                                         FontAwesomeIcons.linkedinIn)),
                                 IconButton(
-                                    tooltip: "Visit my Facebook",
+                                    tooltip:
+                                        AppLocalizations.of(context)!.facebook,
                                     onPressed: () {
                                       launchUrl(Uri.parse(
                                           "https://www.facebook.com/maciej.filochowski.93/"));
@@ -187,7 +243,8 @@ class _HomePageState extends State<HomePage> {
                         text: TextSpan(
                             style: Theme.of(context).textTheme.bodyText1,
                             children: <TextSpan>[
-                              const TextSpan(text: "Made with "),
+                              TextSpan(
+                                  text: AppLocalizations.of(context)!.madeWith),
                               TextSpan(
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () => {
