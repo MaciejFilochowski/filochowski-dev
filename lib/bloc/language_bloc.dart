@@ -17,7 +17,6 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
     on<LoadLanguage>((event, emit) async {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? langCode = prefs.getString(langKey);
-      debugPrint(langCode);
       if (langCode != null) {
         initLocale = Locale(langCode);
       }

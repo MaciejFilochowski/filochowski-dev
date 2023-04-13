@@ -30,7 +30,7 @@ class App extends StatelessWidget {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: const [Locale("en"), Locale("pl")],
             debugShowCheckedModeBanner: false,
-            title: 'Maciej Filochowski - Software developer',
+            title: "Maciej Filochowski - Software developer",
             theme: ThemeData(
                 hoverColor: Colors.black.withOpacity(0.2),
                 iconTheme: const IconThemeData(
@@ -46,7 +46,8 @@ class App extends StatelessWidget {
                   bodyColor: Colors.white,
                   displayColor: Colors.white,
                 )),
-            home: const HomePage(title: 'Maciej Filochowski'),
+            home: const HomePage(
+                title: "Maciej Filochowski - Software developer"),
           );
         },
       ),
@@ -128,14 +129,18 @@ class _HomePageState extends State<HomePage> {
                                           .read<LanguageBloc>()
                                           .add(ChangeLanguage(Locale(value!)));
                                     },
-                                    items: const [
+                                    items: [
                                       DropdownMenuItem(
                                         value: "pl",
-                                        child: Text("Polish"),
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .polish),
                                       ),
                                       DropdownMenuItem(
                                         value: "en",
-                                        child: Text("English"),
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .english),
                                       ),
                                     ]),
                               ],
@@ -166,14 +171,15 @@ class _HomePageState extends State<HomePage> {
                             child: AnimatedTextKit(
                               totalRepeatCount: 1,
                               animatedTexts: [
-                                TypewriterAnimatedText('Maciej Filochowski',
+                                TypewriterAnimatedText(
+                                    AppLocalizations.of(context)!.name,
                                     textStyle:
                                         Theme.of(context).textTheme.headline1,
                                     speed: const Duration(milliseconds: 300)),
                               ],
                             ),
                           ),
-                          const Text("Software Developer"),
+                          Text(AppLocalizations.of(context)!.position),
                           const SizedBox(height: 20),
                           Container(
                             constraints: const BoxConstraints(maxWidth: 800),

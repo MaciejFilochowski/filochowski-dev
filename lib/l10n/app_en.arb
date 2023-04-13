@@ -5,5 +5,9 @@
   "mail": "Send me an e-mail",
   "linkedIn": "Visit my LinkedIn",
   "facebook": "Visit my Facebook",
-  "madeWith": "Made with "
+  "madeWith": "Made with ",
+  "english": "English",
+  "polish": "Polish",
+  "name": "Maciej Filochowski",
+  "position": "Software developer"
 }
