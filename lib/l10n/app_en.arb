@@ -9,5 +9,7 @@
   "english": "English",
   "polish": "Polish",
   "name": "Maciej Filochowski",
-  "position": "Software developer"
+  "position": "Software developer",
+  "dark": "Dark",
+  "light": "Light"
 }

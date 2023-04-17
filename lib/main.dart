@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:filochowski_dev/bloc/language_bloc.dart';
+import 'package:filochowski_dev/bloc/language/language_bloc.dart';
+import 'package:filochowski_dev/bloc/theme/theme_bloc.dart';
+import 'package:filochowski_dev/theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,33 +23,24 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => LanguageBloc()..add(LoadLanguage()))
+        BlocProvider(create: (context) => LanguageBloc()..add(LoadLanguage())),
+        BlocProvider(create: (context) => ThemeBloc()..add(LoadTheme()))
       ],
-      child: BlocBuilder<LanguageBloc, LanguageState>(
-        builder: (context, state) {
-          return MaterialApp(
-            locale: state.locale,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: const [Locale("en"), Locale("pl")],
-            debugShowCheckedModeBanner: false,
-            title: "Maciej Filochowski - Software developer",
-            theme: ThemeData(
-                hoverColor: Colors.black.withOpacity(0.2),
-                iconTheme: const IconThemeData(
-                  color: Colors.white,
-                  size: 35,
-                ),
-                textTheme: const TextTheme(
-                  headline1:
-                      TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-                  bodyText1: TextStyle(),
-                  bodyText2: TextStyle(),
-                ).apply(
-                  bodyColor: Colors.white,
-                  displayColor: Colors.white,
-                )),
-            home: const HomePage(
-                title: "Maciej Filochowski - Software developer"),
+      child: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, themeState) {
+          return BlocBuilder<LanguageBloc, LanguageState>(
+            builder: (context, languageState) {
+              return MaterialApp(
+                locale: languageState.locale,
+                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                supportedLocales: const [Locale("en"), Locale("pl")],
+                debugShowCheckedModeBanner: false,
+                title: "Maciej Filochowski - Software developer",
+                theme: themeState.theme,
+                home: const HomePage(
+                    title: "Maciej Filochowski - Software developer"),
+              );
+            },
           );
         },
       ),
@@ -70,24 +63,24 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: Container(
           width: double.infinity,
-          decoration: const BoxDecoration(
-            color: Colors.black87,
+          decoration: BoxDecoration(
+            color: Theme.of(context).backgroundColor.withOpacity(0.87),
           ),
           child: Stack(
             children: [
               CircularParticle(
                 awayRadius: 200,
-                numberOfParticles: 100,
+                numberOfParticles: MediaQuery.of(context).size.width / 8,
                 speedOfParticles: 0.2,
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 onTapAnimation: true,
-                particleColor: Colors.white.withAlpha(230),
+                particleColor: Theme.of(context).primaryColor.withAlpha(230),
                 awayAnimationDuration: const Duration(milliseconds: 20000),
                 maxParticleSize: 8,
                 isRandSize: true,
                 isRandomColor: false,
-                hoverColor: Colors.white,
+                hoverColor: Theme.of(context).primaryColor,
                 hoverRadius: 100,
                 connectDots: true,
               ),
@@ -95,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                   child: Container(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Theme.of(context).backgroundColor.withOpacity(0.1),
                     alignment: Alignment.center,
                   ),
                 ),
@@ -113,16 +106,64 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 DropdownButton<String>(
                                     value: context
+                                        .read<ThemeBloc>()
+                                        .state
+                                        .themeMode
+                                        .name,
+                                    dropdownColor: Theme.of(context)
+                                        .backgroundColor
+                                        .withOpacity(0.87),
+                                    elevation: 16,
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor),
+                                    underline: Container(
+                                      height: 1,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                                    onChanged: (String? value) {
+                                      if (value == ThemeMode.light.name) {
+                                        context.read<ThemeBloc>().add(
+                                            ChangeTheme(CustomTheme.lightTheme,
+                                                ThemeMode.light));
+                                      } else {
+                                        context.read<ThemeBloc>().add(
+                                            ChangeTheme(CustomTheme.darkTheme,
+                                                ThemeMode.dark));
+                                      }
+                                    },
+                                    items: [
+                                      DropdownMenuItem(
+                                        value: ThemeMode.dark.name,
+                                        child: Text(
+                                            AppLocalizations.of(context)!.dark),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: ThemeMode.light.name,
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .light),
+                                      ),
+                                    ]),
+                                const SizedBox(width: 10),
+                                DropdownButton<String>(
+                                    value: context
                                         .read<LanguageBloc>()
                                         .state
                                         .locale
                                         .languageCode,
-                                    dropdownColor: Colors.black87,
+                                    dropdownColor: Theme.of(context)
+                                        .backgroundColor
+                                        .withOpacity(0.87),
                                     elevation: 16,
-                                    style: const TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor),
                                     underline: Container(
                                       height: 1,
-                                      color: Colors.grey,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
                                     ),
                                     onChanged: (String? value) {
                                       context
@@ -152,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                               width: 150,
                               height: 150,
                               decoration: BoxDecoration(
-                                color: Colors.grey,
+                                color: Theme.of(context).colorScheme.secondary,
                                 shape: BoxShape.circle,
                                 image: const DecorationImage(
                                   image:
@@ -160,7 +201,7 @@ class _HomePageState extends State<HomePage> {
                                   fit: BoxFit.cover,
                                 ),
                                 border: Border.all(
-                                  color: Colors.white,
+                                  color: Theme.of(context).primaryColor,
                                   width: 1.0,
                                 ),
                               ),
